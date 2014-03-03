@@ -10,9 +10,11 @@
 					<p class="parent"></p>
 					<span class="rank">fb</span>
 					<div class="entry">
-						<a class="thumbnail" href=<%= this.link %>>
-							<img src=<%= this.picture %> style="height:70px;width:auto">
-						</a>
+                        <% if (this.picture) { %>
+                            <a class="thumbnail" href=<%= this.link %>>
+                                <img src=<%= this.picture %> style="height:70px;width:auto">
+                            </a>
+                        <% } %>
 						<p class="title">
 							<a class="title" href=<%= this.link %>>
 								<%= this.title %>
@@ -82,7 +84,7 @@
 							Date(current.created_time).getTime())/(3600000)*10)/10,
 							author: current.from.name,
 							link: current.link || "/#",
-							picture: current.picture || "/not_found.jpg"
+							picture: current.picture
 						})
 					);
 				}
