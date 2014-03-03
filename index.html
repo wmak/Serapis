@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+	</head>
+	<body>
+		<div id="fb-root"></div>
+		<script>
+			window.fbAsyncInit = function() {
+				FB.init({
+					appId	: '420413834760858',
+					status	: true,
+					xfbml	: true
+				});
+			};
+			(function(d, s, id) {
+				var js, fjs = d.getElementsByTagName(s)[0];
+				if (d.getElementById(id)) {return;}
+				js = d.createElement(s); js.id = id;
+				js.src = "//connect.facebook.net/en_US/all.js";
+				fjs.parentNode.insertBefore(js, fjs);
+			}(document, 'script', 'facbebook-jssdk'));
+			function FbLogin(){
+				FB.login(function(){}, {
+					scope: 'read_stream'
+				});
+			}
+		</script>
+		<input type="button" value="Facebook" onclick="FbLogin()">
+	</body>
+</html>
