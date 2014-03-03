@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
+		<link rel="stylesheet" type="text/css" href="/reddit.css">
 	</head>
 	<body>
 		<div id="fb-root"></div>
@@ -32,8 +33,11 @@
 				}, {
 					scope: 'read_stream'
 				});
+				document.getElementById("fb-go").style.display = 'none';
 			}
 		</script>
-		<input type="button" value="Facebook" onclick="FbLogin()">
+		<input id="fb-go" type="button" value="Facebook" onclick="FbLogin()">
+		<div id="fb-feed">
+		</div>
 	</body>
 </html>
