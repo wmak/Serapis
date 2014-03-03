@@ -6,13 +6,19 @@
 		<script type="text/javascript" src="/serapis/jQote2.js"></script>
 		<script type="text/x-jqote-template" id="template">
 			<![CDATA[
-				<div class="link" data-ups=<%= this.up %>>
+				<div class="link thing" data-ups=<%= this.up %>>
 					<p class="parent"></p>
 					<span class="rank">fb</span>
+                    <div class="midcol">
+                        <div class="arrow up" onclick="like('<%= this.id %>')"></div>    
+                        <div class="score unvoted"><%= this.up %></div>
+                    </div>
 					<div class="entry">
-						<a class="thumbnail" href=<%= this.link %>>
-							<img src=<%= this.picture %> style="height:70px;width:auto">
-						</a>
+                        <% if (this.picture) { %>
+                            <a class="thumbnail" href=<%= this.link %>>
+                                <img src=<%= this.picture %> style="height:70px;width:auto">
+                            </a>
+                        <% } %>
 						<p class="title">
 							<a class="title" href=<%= this.link %>>
 								<%= this.title %>
@@ -36,14 +42,6 @@
 	<body>
 		<div id="fb-root"></div>
 		<script>
-			window.fbAsyncInit = function() {
-				FB.init({
-					appId	: '420413834760858',
-					status	: true,
-					xfbml	: true
-				});
-			};
-			
 			(function(d, s, id) {
 				var js, fjs = d.getElementsByTagName(s)[0];
 				if (d.getElementById(id)) {return;}
@@ -52,26 +50,42 @@
 				fjs.parentNode.insertBefore(js, fjs);
 			}(document, 'script', 'facbebook-jssdk'));
 
+			window.fbAsyncInit = function() {
+				FB.init({
+					appId	: '420413834760858',
+					status	: true,
+					xfbml	: true
+				});
+                FB.getLoginStatus(function(response){
+                    console.log(response);
+                    if (response.status === "connected"){
+                        apiCall();
+                    }
+                });
+			}
+
 			function FbLogin(){
 				FB.login(function(){
-					FB.api(
-						"/me/home",
-						function (response) {
-							if (response && !response.error){
-								genFeed(response);
-							}
-						}
-					);
+                    apiCall();
 				}, {
 					scope: 'read_stream'
 				});
 			}
+            
+            function apiCall(){
+                $("#fb-go").html("<img src='loading.gif' style='height:70px;width:autoi'>");
+                FB.api(
+                    "/me/home",
+                    function (r) {
+                        if (r && !r.error){
+                            genFeed(r);
+                        }
+                    }
+                );
+            }
 
-			var test;
 			function genFeed(r){
-				test = r;
 				for (var i=0; i < r.data.length; i++){
-					console.log(r.data[i]);
 					current = r.data[i];
 					$("#fb-feed").append(
 						$("#template").jqote({
@@ -82,13 +96,21 @@
 							Date(current.created_time).getTime())/(3600000)*10)/10,
 							author: current.from.name,
 							link: current.link || "/#",
-							picture: current.picture || "/not_found.jpg"
+							picture: current.picture,
+                            id : current.id
 						})
 					);
 				}
+                $("#fb-go").html("");
 			}
+            
+            function like(id){
+                console.log(id);
+            }
 		</script>
-		<input id="fb-go" type="button" value="Facebook" onclick="FbLogin()">
+        <div id="fb-go">
+            <input type="button" value="Facebook" onclick="FbLogin()">
+        </div>
 		<div class="content" role="main">
             <style>
                body >.content .link .rank { width: 2.2ex } body >.content .link .midcol { width: 5.1ex } 
