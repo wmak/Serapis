@@ -52,71 +52,7 @@
  </head>
  <body>
   <div id="fb-root"></div>
-  <script>
-   (function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) {return;}
-    js = d.createElement(s); js.id = id;
-    js.src = "//connect.facebook.net/en_US/all.js";
-    fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facbebook-jssdk'));
-
-   window.fbAsyncInit = function() {
-    FB.init({
-     appId : '420413834760858',
-     status : true,
-     xfbml : true
-    });
-     FB.getLoginStatus(function(response){
-      console.log(response);
-      if (response.status === "connected"){
-       apiCall();
-      }
-     });
-   }
-
-   function FbLogin(){
-    FB.login(function(){
-     apiCall();
-    }, {
-     scope: 'read_stream'
-    });
-   }
-
-   function apiCall(){
-    FB.api(
-     "/me/home",
-     function (r) {
-      if (r && !r.error){
-      genFeed(r);
-     }
-    });
-   }
-
-   var test;
-   function genFeed(r){
-    test = r;
-    for (var i=0; i < r.data.length; i++){
-     current = r.data[i];
-     time = Math.round((new Date().getTime() - new Date(current.created_time).getTime())/(3600000)*10)/10
-     $("#fb-feed").append(
-      $("#template").jqote({
-       up : (current.likes && current.likes.data.length) || 0,
-       commentlink : (current.actions && current.actions[0].link),
-       comments : (current.comments && current.comments.data.length) || 0,
-       upvote : (current.actions && current.actions[1] && current.actions[1].link),
-       title : current.story || current.message,
-       created : time, 
-       author : current.from.name,
-       link : current.link || "/#",
-       picture : current.picture,
-       id : current.from.id
-      })
-     );
-    }
-    $("#fb-go").html("<a> Facebook </a>");
-   }
-  </script>
+  <script type="text/javascript" src="facebook.js"></script>
   <div id="header">
    <div class="sr-header-area">
     <ul class="flat-list sr-bar hover" id="sr-bar">
