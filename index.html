@@ -29,7 +29,7 @@
       </p>
       <p class="tagline">
        submitted <%= this.created %> hours ago by 
-       <a href=<%= this.link %>>
+       <a href="http://www.facebook.com/<%= this.id %>">
         <%= this.author %>
        </a>
       </p>
@@ -40,7 +40,7 @@
           <%= this.comments %> comments
          </a>
         <% } else { %>
-         no comments
+         <a class="comments"> no commenting </a>
         <% } %>
        </li>
       </ul>
@@ -110,18 +110,22 @@
        author : current.from.name,
        link : current.link || "/#",
        picture : current.picture,
-       id : current.id
+       id : current.from.id
       })
      );
     }
-    $("#fb-go").html("<div> Facebook </div>");
+    $("#fb-go").html("<a> Facebook </a>");
    }
   </script>
   <div id="header">
-   <div class="width-clip">
-    <ul>
+   <div class="sr-header-area">
+    <ul class="flat-list sr-bar hover" id="sr-bar">
      <li id="fb-go">
-      <div style="color:blue" onclick="FbLogin()"> Facebook </div>
+      <a style="color:blue" onclick="FbLogin()"> Facebook </a>
+     </li>
+     <li id="reddit-go">
+      <span class="seperator">-</span>
+      <a style="color:blue" onclick="RedditLogin()"> Reddit </a>
      </li>
     </ul>
    </div>
