@@ -1,124 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<link rel="stylesheet" type="text/css" href="/reddit.css">
-		<script type="text/javascript" src="/jquery.js"></script>
-		<script type="text/javascript" src="/jQote2.js"></script>
-		<script type="text/x-jqote-template" id="template">
-			<![CDATA[
-				<div class="link thing" data-ups=<%= this.up %>>
-					<p class="parent"></p>
-					<span class="rank">fb</span>
-                    <div class="midcol">
-                        <div class="arrow up" onclick="like('<%= this.id %>')"></div>    
-                        <div class="score unvoted"><%= this.up %></div>
-                    </div>
-					<div class="entry">
-                        <% if (this.picture) { %>
-                            <a class="thumbnail" href=<%= this.link %>>
-                                <img src=<%= this.picture %> style="height:70px;width:auto">
-                            </a>
-                        <% } %>
-						<p class="title">
-							<a class="title" href=<%= this.link %>>
-								<%= this.title %>
-							</a>
-							<span class="domain">
-								(facebook)
-							</span>
-						</p>
-						<p class="tagline">
-							submitted <%= this.created %> hours ago by 
-							<a href=<%= this.link %>>
-								<%= this.author %>
-							</a>
-						</p>
-					</div>
-				</div>
-				<div class="child"></div>
-			]]>
-		</script>
-	</head>
-	<body>
-		<div id="fb-root"></div>
-		<script>
-			(function(d, s, id) {
-				var js, fjs = d.getElementsByTagName(s)[0];
-				if (d.getElementById(id)) {return;}
-				js = d.createElement(s); js.id = id;
-				js.src = "//connect.facebook.net/en_US/all.js";
-				fjs.parentNode.insertBefore(js, fjs);
-			}(document, 'script', 'facbebook-jssdk'));
+ <head>
+  <link rel="stylesheet" type="text/css" href="/reddit.css">
+  <script type="text/javascript" src="/jquery.js"></script>
+  <script type="text/javascript" src="/jQote2.js"></script>
+  <script type="text/x-jqote-template" id="template">
+   <![CDATA[
+    <div class="link thing">
+     <p class="parent"></p>
+     <span class="rank">fb</span>
+      <div class="midcol">
+       <div class="arrow up"></div>
+       <div class="score unvoted"><%= this.up %></div>
+      </div>
+     <div class="entry">
+      <% if (this.picture) { %>
+       <a class="thumbnail" href=<%= this.link %>>
+        <img src=<%= this.picture %> style="height:70px;width:auto">
+       </a>
+      <% } %>
+      <p class="title">
+       <a class="title" href=<%= this.link %>>
+        <%= this.title %>
+       </a>
+       <span class="domain">
+        (facebook)
+       </span>
+      </p>
+      <p class="tagline">
+       submitted <%= this.created %> hours ago by 
+       <a href=<%= this.link %>>
+        <%= this.author %>
+       </a>
+      </p>
+      <ul class="flat-list buttons">
+       <li class="first">
+        <% if (this.commentlink) { %>
+         <a class="comments" href=<%= this.commentlink%>>
+          <%= this.comments %> comments
+         </a>
+        <% } else { %>
+         no comments
+        <% } %>
+       </li>
+      </ul>
+     </div>
+    </div>
+    <div class="child"></div>
+   ]]>
+  </script>
+ </head>
+ <body>
+  <div id="fb-root"></div>
+  <script>
+   (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) {return;}
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/all.js";
+    fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facbebook-jssdk'));
 
-			window.fbAsyncInit = function() {
-				FB.init({
-					appId	: '420413834760858',
-					status	: true,
-					xfbml	: true
-				});
-                FB.getLoginStatus(function(response){
-                    console.log(response);
-                    if (response.status === "connected"){
-                        apiCall();
-                    }
-                });
-			}
+   window.fbAsyncInit = function() {
+    FB.init({
+     appId : '420413834760858',
+     status : true,
+     xfbml : true
+    });
+     FB.getLoginStatus(function(response){
+      console.log(response);
+      if (response.status === "connected"){
+       apiCall();
+      }
+     });
+   }
 
-			function FbLogin(){
-				FB.login(function(){
-                    apiCall();
-				}, {
-					scope: 'read_stream'
-				});
-			}
-            
-            function apiCall(){
-                $("#fb-go").html("<img src='loading.gif' style='height:70px;width:autoi'>");
-                FB.api(
-                    "/me/home",
-                    function (r) {
-                        if (r && !r.error){
-                            genFeed(r);
-                        }
-                    }
-                );
-            }
+   function FbLogin(){
+    FB.login(function(){
+     apiCall();
+    }, {
+     scope: 'read_stream'
+    });
+   }
 
-			function genFeed(r){
-				for (var i=0; i < r.data.length; i++){
-					current = r.data[i];
-					$("#fb-feed").append(
-						$("#template").jqote({
-							up : (current.likes && current.likes.data.length)
-							|| 0,
-							title : current.story || current.message,
-							created : Math.round((new Date().getTime() - new
-							Date(current.created_time).getTime())/(3600000)*10)/10,
-							author: current.from.name,
-							link: current.link || "/#",
-							picture: current.picture,
-                            id : current.id
-						})
-					);
-				}
-                $("#fb-go").html("");
-			}
-            
-            function like(id){
-                console.log(id);
-            }
-		</script>
-        <div id="fb-go">
-            <input type="button" value="Facebook" onclick="FbLogin()">
-        </div>
-		<div class="content" role="main">
-            <style>
-               body >.content .link .rank { width: 2.2ex } body >.content .link .midcol { width: 5.1ex } 
-            </style>
-            <div class="spacer">
-                <div class="sitetable linklisting" id="fb-feed">
-                </div>
-            </div>
-		</div>
-	</body>
+   function apiCall(){
+    FB.api(
+     "/me/home",
+     function (r) {
+      if (r && !r.error){
+      genFeed(r);
+     }
+    });
+   }
+
+   var test;
+   function genFeed(r){
+    test = r;
+    for (var i=0; i < r.data.length; i++){
+     current = r.data[i];
+     time = Math.round((new Date().getTime() - new Date(current.created_time).getTime())/(3600000)*10)/10
+     $("#fb-feed").append(
+      $("#template").jqote({
+       up : (current.likes && current.likes.data.length) || 0,
+       commentlink : (current.actions && current.actions[0].link),
+       comments : (current.comments && current.comments.data.length) || 0,
+       upvote : (current.actions && current.actions[1] && current.actions[1].link),
+       title : current.story || current.message,
+       created : time, 
+       author : current.from.name,
+       link : current.link || "/#",
+       picture : current.picture,
+       id : current.id
+      })
+     );
+    }
+    $("#fb-go").html("<div> Facebook </div>");
+   }
+  </script>
+  <div id="header">
+   <div class="width-clip">
+    <ul>
+     <li id="fb-go">
+      <div style="color:blue" onclick="FbLogin()"> Facebook </div>
+     </li>
+    </ul>
+   </div>
+   <h1>
+    Serapis
+   </h1>
+  </div>
+  <div class="content" role="main">
+   <style>
+   body >.content .link .rank { width: 2.2ex } body >.content .link .midcol { width: 5.1ex } 
+   </style>
+   <div class="spacer">
+    <div class="sitetable linklisting" id="fb-feed">
+    </div>
+   </div>
+  </div>
+ </body>
 </html>
