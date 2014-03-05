@@ -1,5 +1,5 @@
 var total = 15;
-var offset = $(document).height()*0.2; //when to start loading
+var offset = $(document).height()*0.4; //when to start loading
 (function(d, s, id) {
  var js, fjs = d.getElementsByTagName(s)[0];
  if (d.getElementById(id)) {return;}
@@ -31,6 +31,7 @@ function FbLogin(){
 }
 
 function apiCall(){
+ $("#loading-bar").html('<img src=loading.gif style="height:50px;display:block;margin-left:auto;margin-right:auto">');
  FB.api(
   "/me/home?limit=" + total,
   function (r) {
@@ -64,6 +65,7 @@ function genFeed(r){
  }
  total += 15;
  $("#fb-go").html("<a> Facebook </a>");
+ $("#loading-bar").html('');
 }
 
 $(window).scroll(function() {
