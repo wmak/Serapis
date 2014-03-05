@@ -56,7 +56,7 @@ function genFeed(r){
     title : current.story || current.message,
     created : time, 
     author : current.from.name,
-    link : current.link || "/#",
+    link : current.link || (current.actions && current.actions[0].link),
     picture : current.picture,
     id : current.from.id
    })
