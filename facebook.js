@@ -62,8 +62,9 @@ function genFeed(r){
     id : current.from.id
    })
   );
+  total += 1;
  }
- total += 15;
+ 
  $("#fb-go").html("<a> Facebook </a>");
  $("#loading-bar").html('');
 }
