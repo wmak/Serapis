@@ -58,7 +58,8 @@ function genFeed(r){
     author : current.from.name,
     link : current.link || (current.actions && current.actions[0].link),
     picture : current.picture,
-    id : current.from.id
+    id : current.from.id,
+    rank : i+1
    })
   );
  }
