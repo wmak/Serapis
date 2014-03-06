@@ -4,6 +4,7 @@
   <link rel="stylesheet" type="text/css" href="reddit.css">
   <script type="text/javascript" src="jquery.js"></script>
   <script type="text/javascript" src="jQote2.js"></script>
+  <script type="text/javascript" src="shuffle.js"></script>
   <script type="text/x-jqote-template" id="template">
    <![CDATA[
     <div class="link thing">
@@ -24,12 +25,12 @@
         <%= this.title %>
        </a>
        <span class="domain">
-        (facebook)
+        (<%= this.subreddit %>)
        </span>
       </p>
       <p class="tagline">
        submitted <%= this.created %> hours ago by 
-       <a href="http://www.facebook.com/<%= this.id %>">
+       <a href="<%= this.id %>">
         <%= this.author %>
        </a>
       </p>
@@ -49,10 +50,12 @@
     <div class="child"></div>
    ]]>
   </script>
+  <script type="text/javascript">
+  </script>
  </head>
  <body>
   <div id="fb-root"></div>
-  <script type="text/javascript" src="facebook.js"></script>
+  <script type="text/javascript" src="feeds.js"></script>
   <div id="header">
    <div class="sr-header-area">
     <ul class="flat-list sr-bar hover" id="sr-bar">
@@ -61,7 +64,7 @@
      </li>
      <li id="reddit-go">
       <span class="seperator">-</span>
-      <a style="color:blue" onclick="RedditLogin()"> Reddit </a>
+      Reddit
      </li>
     </ul>
    </div>
@@ -74,7 +77,7 @@
    body >.content .link .rank { width: 2.2ex } body >.content .link .midcol { width: 5.1ex } 
    </style>
    <div class="spacer">
-    <div class="sitetable linklisting" id="fb-feed">
+    <div class="sitetable linklisting" id="feed">
     </div>
 	<div id="loading-bar"></div>
    </div>
