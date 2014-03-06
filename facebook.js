@@ -1,4 +1,4 @@
-var total = 15;
+var total = 25;
 var offset = $(document).height()*0.4; //when to start loading
 (function(d, s, id) {
  var js, fjs = d.getElementsByTagName(s)[0];
@@ -45,7 +45,7 @@ function apiCall(){
 var test;
 function genFeed(r){
  test = r;
- for (var i=total-15; i < r.data.length; i++){
+ for (var i=total-25; i < r.data.length; i++){
   current = r.data[i];
   time = Math.round((new Date().getTime() - new Date(current.created_time).getTime())/(3600000)*10)/10
   $("#fb-feed").append(
