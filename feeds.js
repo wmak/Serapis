@@ -1,36 +1,11 @@
 var total = 25;
 var offset = $(document).height()*0.4; //when to start loading
-var feed;
+var last;
 function Gen(){
- feed = apiCall();
- console.log(feed);
- $.getJSON("http://www.reddit.com/.json", function(response){
+ $.getJSON("http://www.reddit.com/.json?count=25&after=" + last, function(response){
   front = response.data.children
-  feed += redFeed(front);
+  apiCall(front);
  });
- console.log(feed);
-}
- 
-function redFeed(front){
- var newFeed = new Array(front.length)
- for (var i=0; i < front.length; i++){
-  current = front[i];
-  time = Math.round((new Date().getTime() - new Date(current.time*1000).getTime())/(3600000)*10)/10
-  newFeed[i] = $("#template").jqote({
-    up : current.ups,
-    commentlink : current.permalink,
-    comments : current.num_comments,
-    upvote : 0, //TODO
-    title : current.title,
-    created : time,
-    author : current.author,
-    link : current.url,
-    picture : current.thumbnail,
-    id : "http://reddit.com/u/" + current.author,
-    rank: i+1
-   })
- }
- return newFeed;
 }
 
 (function(d, s, id) {
@@ -47,40 +22,38 @@ window.fbAsyncInit = function() {
   status : true,
   xfbml : true
  });
-  FB.getLoginStatus(function(response){
-   if (response.status === "connected"){
-    Gen();
-   }
-  });
+ FB.getLoginStatus(function(response){
+  if (response.status === "connected"){
+   Gen();
+  }
+ });
 }
 
 function FbLogin(){
  FB.login(function(){
-  apiCall();
+  Gen();
  }, {
   scope: 'read_stream'
  });
 }
 
-function apiCall(){
+function apiCall(front){
  $("#loading-bar").html('<img src=loading.gif style="height:50px;display:block;margin-left:auto;margin-right:auto">');
  FB.api(
   "/me/home?limit=" + total,
   function (r) {
    if (r && !r.error){
-    return fbFeed(r);
+    return fbFeed(r, front);
    }
   }
  );
 }
 
-function fbFeed(r){
- var newFeed = new Array(r.data.length)
+function fbFeed(r, front){
  for (var i=total-25; i < r.data.length; i++){
   current = r.data[i];
   time = Math.round((new Date().getTime() - new Date(current.created_time).getTime())/(3600000)*10)/10
-  newFeed[i] = 
-   $("#template").jqote({
+  $("#feed").append($("#template").jqote({
     up : (current.likes && current.likes.data.length) || 0,
     commentlink : (current.actions && current.actions[0].link),
     comments : (current.comments && current.comments.data.length) || 0,
@@ -90,14 +63,32 @@ function fbFeed(r){
     author : current.from.name,
     link : current.link || (current.actions && current.actions[0].link),
     picture : current.picture,
-    id : current.from.id,
-    rank : i+1
-   });
-  total += 1;
+    id : "http://www.facebook.com/" + current.from.id,
+    rank : "fb",
+    subreddit : "facebook"
+   }));
+  current = front[i%25].data;
+  time = Math.round((new Date().getTime() - new Date(current.time*1000).getTime())/(3600000)*10)/10
+  $("#feed").append($("#template").jqote({
+    up : current.ups,
+    commentlink : current.permalink,
+    comments : current.num_comments,
+    upvote : 0, //TODO
+    title : current.title,
+    created : time,
+    author : current.author,
+    link : current.url,
+    picture : (current.thumbnail == "self" && undefined) || current.thumbnail,
+    id : "http://reddit.com/u/" + current.author,
+    rank : "rd", 
+    subreddit: current.subreddit,
+   }));
+   total += 1;
+   console.log(total);
  }
+ last = current.name;
  $("#fb-go").html("<a> Facebook </a>");
  $("#loading-bar").html('');
- return newFeed;
 }
 
 $(window).scroll(function() {

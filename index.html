@@ -25,12 +25,12 @@
         <%= this.title %>
        </a>
        <span class="domain">
-        (facebook)
+        (<%= this.subreddit %>)
        </span>
       </p>
       <p class="tagline">
        submitted <%= this.created %> hours ago by 
-       <a href="http://www.facebook.com/<%= this.id %>">
+       <a href="<%= this.id %>">
         <%= this.author %>
        </a>
       </p>
