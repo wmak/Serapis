@@ -1,5 +1,38 @@
 var total = 25;
 var offset = $(document).height()*0.4; //when to start loading
+var feed;
+function Gen(){
+ feed = apiCall();
+ console.log(feed);
+ $.getJSON("http://www.reddit.com/.json", function(response){
+  front = response.data.children
+  feed += redFeed(front);
+ });
+ console.log(feed);
+}
+ 
+function redFeed(front){
+ var newFeed = new Array(front.length)
+ for (var i=0; i < front.length; i++){
+  current = front[i];
+  time = Math.round((new Date().getTime() - new Date(current.time*1000).getTime())/(3600000)*10)/10
+  newFeed[i] = $("#template").jqote({
+    up : current.ups,
+    commentlink : current.permalink,
+    comments : current.num_comments,
+    upvote : 0, //TODO
+    title : current.title,
+    created : time,
+    author : current.author,
+    link : current.url,
+    picture : current.thumbnail,
+    id : "http://reddit.com/u/" + current.author,
+    rank: i+1
+   })
+ }
+ return newFeed;
+}
+
 (function(d, s, id) {
  var js, fjs = d.getElementsByTagName(s)[0];
  if (d.getElementById(id)) {return;}
@@ -10,14 +43,13 @@ var offset = $(document).height()*0.4; //when to start loading
 
 window.fbAsyncInit = function() {
  FB.init({
- appId : '420413834760858',
+  appId : '420413834760858',
   status : true,
   xfbml : true
  });
   FB.getLoginStatus(function(response){
-   console.log(response);
    if (response.status === "connected"){
-    apiCall();
+    Gen();
    }
   });
 }
@@ -36,19 +68,18 @@ function apiCall(){
   "/me/home?limit=" + total,
   function (r) {
    if (r && !r.error){
-    genFeed(r);
+    return fbFeed(r);
    }
   }
  );
 }
 
-var test;
-function genFeed(r){
- test = r;
+function fbFeed(r){
+ var newFeed = new Array(r.data.length)
  for (var i=total-25; i < r.data.length; i++){
   current = r.data[i];
   time = Math.round((new Date().getTime() - new Date(current.created_time).getTime())/(3600000)*10)/10
-  $("#fb-feed").append(
+  newFeed[i] = 
    $("#template").jqote({
     up : (current.likes && current.likes.data.length) || 0,
     commentlink : (current.actions && current.actions[0].link),
@@ -61,17 +92,16 @@ function genFeed(r){
     picture : current.picture,
     id : current.from.id,
     rank : i+1
-   })
-  );
+   });
   total += 1;
  }
- 
  $("#fb-go").html("<a> Facebook </a>");
  $("#loading-bar").html('');
+ return newFeed;
 }
 
 $(window).scroll(function() {
    if($(window).scrollTop() + $(window).height() > $(document).height() - offset) {
-       apiCall();
+    Gen();
    }
 });
