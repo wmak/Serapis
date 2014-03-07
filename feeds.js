@@ -71,7 +71,7 @@ function fbFeed(r, front){
   time = Math.round((new Date().getTime() - new Date(current.time*1000).getTime())/(3600000)*10)/10
   $("#feed").append($("#template").jqote({
     up : current.ups,
-    commentlink : current.permalink,
+    commentlink : "http://reddit.com" + current.permalink,
     comments : current.num_comments,
     upvote : 0, //TODO
     title : current.title,

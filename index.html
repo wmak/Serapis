@@ -16,7 +16,7 @@
       </div>
      <div class="entry">
       <% if (this.picture) { %>
-       <a class="thumbnail" href=<%= this.link %>>
+       <a class="thumbnail" href="<%= this.link %>">
         <img src=<%= this.picture %> style="height:70px;width:auto">
        </a>
       <% } %>
@@ -37,7 +37,7 @@
       <ul class="flat-list buttons">
        <li class="first">
         <% if (this.commentlink) { %>
-         <a class="comments" href=<%= this.commentlink%>>
+         <a class="comments" href="<%= this.commentlink %>">
           <%= this.comments %> comments
          </a>
         <% } else { %>
