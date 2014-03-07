@@ -70,7 +70,7 @@ function fbFeed(r, front){
   current = front[i%25].data;
   time = Math.round((new Date().getTime() - new Date(current.created_utc*1000).getTime())/(3600000)*10)/10
   $("#feed").append($("#template").jqote({
-    up : current.ups,
+    up : current.ups - current.downs,
     commentlink : "http://reddit.com" + current.permalink,
     comments : current.num_comments,
     upvote : 0, //TODO
