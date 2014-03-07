@@ -1,5 +1,5 @@
 var total = 25;
-var offset = $(document).height()*0.6; //when to start loading
+var offset = $(document).height()*0.4; //when to start loading
 var last;
 function Gen(){
  $.getJSON("http://www.reddit.com/.json?count=25&after=" + last, function(response){
