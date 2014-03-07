@@ -92,7 +92,11 @@ function fbFeed(r, front){
 }
 
 $(window).scroll(function() {
+ if (total<100){
    if($(window).scrollTop() + $(window).height() > $(document).height() - offset) {
     Gen();
    }
+ } else {
+  $("#loading-bar").html("<h1>End of page</h1>");
+ }
 });
