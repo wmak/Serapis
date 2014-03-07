@@ -68,7 +68,7 @@ function fbFeed(r, front){
     subreddit : "facebook"
    }));
   current = front[i%25].data;
-  time = Math.round((new Date().getTime() - new Date(current.time*1000).getTime())/(3600000)*10)/10
+  time = Math.round((new Date().getTime() - new Date(current.created_utc*1000).getTime())/(3600000)*10)/10
   $("#feed").append($("#template").jqote({
     up : current.ups,
     commentlink : "http://reddit.com" + current.permalink,
