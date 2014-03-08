@@ -57,7 +57,7 @@ function fbFeed(r, front){
     up : (current.likes && current.likes.data.length) || 0,
     commentlink : (current.actions && current.actions[0].link),
     comments : (current.comments && current.comments.data.length) || 0,
-    upvote : (current.actions && current.actions[1] && current.actions[1].link),
+    upvote : (current.actions && current.actions[1] && current.actions[1].link),//TODO
     title : current.story || current.message,
     created : time, 
     author : current.from.name,
