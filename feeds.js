@@ -38,7 +38,7 @@ function FbLogin(){
 }
 
 function apiCall(front){
- $("#loading-bar").html('<img src=loading.gif style="height:50px;display:block;margin-left:auto;margin-right:auto">');
+ $("#loading-bar").html('<img src=loading.gif style="height:100px;display:block;margin-left:auto;margin-right:auto">');
  FB.api(
   "/me/home?limit=" + total,
   function (r) {
